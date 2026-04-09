@@ -391,35 +391,78 @@ if not st.session_state.sidebar_open and st.session_state.drawer_open:
     </div>
     """, unsafe_allow_html=True)
     
-    # Navigation buttons positioned over the drawer
+    # Navigation using styled st.radio positioned over the drawer
     menu_items = [
         ("Dashboard", "📊"),
-        ("Analysis", "📈"), 
+        ("Analysis", "📈"),
         ("Students", "👥"),
         ("Insights", "💡"),
         ("Compare", "⚖️")
     ]
-    
+
+    # Create navigation options with icons
+    nav_options = [f"{icon} {label}" for label, icon in menu_items]
+    nav_labels = [label for label, icon in menu_items]
+
+    # Custom CSS for the radio buttons
+    st.markdown("""
+    <style>
+    div[data-testid="stRadio"] {
+        position: fixed !important;
+        left: 24px !important;
+        top: 220px !important;
+        z-index: 1001 !important;
+        width: 272px !important;
+        background: rgba(15, 23, 42, 0.95) !important;
+        backdrop-filter: blur(20px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 16px !important;
+        padding: 20px !important;
+    }
+    div[data-testid="stRadio"] label {
+        color: #94a3b8 !important;
+        font-family: 'DM Sans', sans-serif !important;
+        font-weight: 500 !important;
+        font-size: 0.88rem !important;
+        padding: 12px 16px !important;
+        margin: 4px 0 !important;
+        border-radius: 8px !important;
+        transition: all 0.3s ease !important;
+        cursor: pointer !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+    }
+    div[data-testid="stRadio"] label:hover {
+        background: rgba(0, 212, 255, 0.08) !important;
+        color: #e2e8f0 !important;
+    }
+    div[data-testid="stRadio"] input[type="radio"]:checked + label {
+        background: rgba(0, 212, 255, 0.12) !important;
+        border: 1px solid rgba(0, 212, 255, 0.3) !important;
+        color: #ffffff !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # Get current page index
     current_page = st.session_state.get("page", "Dashboard")
-    
-    # Create buttons with custom styling
-    for label, icon in menu_items:
-        # Custom CSS for each button
-        st.markdown(f"""
-        <style>
-        div[data-testid="stButton"][data-key="drawer_nav_{label}"] {{
-            position: fixed !important;
-            left: 24px !important;
-            top: {220 + menu_items.index((label, icon)) * 70}px !important;
-            z-index: 1001 !important;
-            width: 272px !important;
-        }}
-        </style>
-        """, unsafe_allow_html=True)
-        
-        # Create the button
-        if st.button(f"{icon} {label}", key=f"drawer_nav_{label}"):
-            st.session_state.page = label
+    current_index = nav_labels.index(current_page) if current_page in nav_labels else 0
+
+    # Create the radio button navigation
+    selected_option = st.radio(
+        "",
+        options=nav_options,
+        index=current_index,
+        key="drawer_navigation",
+        label_visibility="collapsed"
+    )
+
+    # Update page based on selection
+    if selected_option:
+        selected_label = nav_labels[nav_options.index(selected_option)]
+        if selected_label != current_page:
+            st.session_state.page = selected_label
             st.session_state.drawer_open = False
             st.rerun()
     
