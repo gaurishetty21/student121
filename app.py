@@ -34,7 +34,8 @@ html, body, [class*="css"] {
         radial-gradient(ellipse 80% 50% at 10% 0%, rgba(0,212,255,0.06) 0%, transparent 60%),
         radial-gradient(ellipse 60% 50% at 90% 100%, rgba(124,58,237,0.05) 0%, transparent 60%) !important;
 }
-#MainMenu, footer, header { visibility: hidden; }
+footer, header { visibility: hidden; }
+#MainMenu { visibility: visible !important; }
 .block-container { padding: 2rem 2.5rem !important; max-width: 1440px !important; }
 section[data-testid="stSidebar"] > div { padding-top: 1rem !important; }
 
