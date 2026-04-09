@@ -259,16 +259,62 @@ if st.session_state.sidebar_open:
         </div>
         """, unsafe_allow_html=True)
 else:
-    # When sidebar is closed, show a compact vertical navigation
+    # When sidebar is closed, show a horizontal navigation menu
     st.markdown("---")
-    st.markdown("### 📋 Navigation")
+
+    # Create horizontal menu bar
+    st.markdown("""
+    <style>
+    .horizontal-menu {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 2rem;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .menu-item {
+        flex: 1;
+        text-align: center;
+    }
+    .menu-button {
+        width: 100%;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        color: #94a3b8;
+        padding: 10px 8px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: 'DM Sans', sans-serif;
+    }
+    .menu-button:hover {
+        background: rgba(255,255,255,0.06);
+        border-color: rgba(0,212,255,0.2);
+        color: #e2e8f0;
+    }
+    .menu-button.active {
+        background: rgba(0,212,255,0.1);
+        border-color: rgba(0,212,255,0.3);
+        color: #00d4ff;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
     pages = ["⚡  Dashboard", "📈  Analysis", "👥  Students", "🔍  Insights", "⚖️  Compare"]
-    for i, p in enumerate(pages):
-        if st.button(p, key=f"nav_{i}", use_container_width=True):
-            st.session_state.page = p
-            st.rerun()
-    st.markdown("---")
-    
+    current_page = st.session_state.get("page", "⚡  Dashboard")
+
+    # Create horizontal menu
+    cols = st.columns(len(pages))
+    for i, (col, p) in enumerate(zip(cols, pages)):
+        with col:
+            is_active = current_page == p
+            button_type = "primary" if is_active else "secondary"
+            if st.button(p, key=f"nav_{i}", use_container_width=True, type=button_type):
+                st.session_state.page = p
+                st.rerun()
+
     page = st.session_state.get("page", "⚡  Dashboard")
 
 
@@ -582,7 +628,7 @@ elif page == "⚖️  Compare":
         fig.add_trace(go.Scatterpolar(
             r=closed, theta=theta, fill="toself", name=sname,
             line=dict(color=color, width=2),
-            fillcolor=color + "22"
+            fillcolor=f"rgba({int(color[1:3], 16)}, {int(color[3:5], 16)}, {int(color[5:7], 16)}, 0.15)"
         ))
     fig.update_layout(
         polar=dict(
