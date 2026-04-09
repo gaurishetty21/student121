@@ -17,7 +17,7 @@ st.set_page_config(
     page_title="EduMetrics — Student Analytics",
     page_icon="📊",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 st.markdown("""
@@ -201,38 +201,75 @@ def score_color(score):
 df = load_data()
 summary = get_summary(df)
 
-with st.sidebar:
+# Initialize sidebar state
+if "sidebar_open" not in st.session_state:
+    st.session_state.sidebar_open = True
+
+# Custom sidebar toggle button
+col_toggle, col_title = st.columns([0.1, 0.9])
+with col_toggle:
+    if st.button("☰", key="sidebar_toggle", help="Toggle sidebar"):
+        st.session_state.sidebar_open = not st.session_state.sidebar_open
+        st.rerun()
+
+with col_title:
     st.markdown("""
-    <div style="text-align:center;padding:1.2rem 0 1.8rem">
-        <div style="font-size:2.8rem;filter:drop-shadow(0 0 20px rgba(0,212,255,0.6))">📊</div>
-        <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;
-            background:linear-gradient(135deg,#00d4ff,#a78bfa);
-            -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-top:6px">
-            EduMetrics
-        </div>
-        <div style="font-size:0.7rem;color:#1e293b;margin-top:3px;letter-spacing:0.08em">
-            ANALYTICS PLATFORM 2026
-        </div>
+    <div style="font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;
+        background:linear-gradient(135deg,#00d4ff,#a78bfa);
+        -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.5rem">
+        EduMetrics Analytics Platform
+    </div>
+    <div style="font-size:0.8rem;color:#64748b;margin-bottom:1rem">
+        Student Performance Dashboard 2026
     </div>
     """, unsafe_allow_html=True)
 
-    page = st.radio("Navigation", [
-        "⚡  Dashboard",
-        "📈  Analysis",
-        "👥  Students",
-        "🔍  Insights",
-        "⚖️  Compare"
-    ], label_visibility="collapsed")
+# Show sidebar content only when open
+if st.session_state.sidebar_open:
+    with st.sidebar:
+        st.markdown("""
+        <div style="text-align:center;padding:1.2rem 0 1.8rem">
+            <div style="font-size:2.8rem;filter:drop-shadow(0 0 20px rgba(0,212,255,0.6))">📊</div>
+            <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;
+                background:linear-gradient(135deg,#00d4ff,#a78bfa);
+                -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-top:6px">
+                EduMetrics
+            </div>
+            <div style="font-size:0.7rem;color:#1e293b;margin-top:3px;letter-spacing:0.08em">
+                ANALYTICS PLATFORM 2026
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
+        page = st.radio("Navigation", [
+            "⚡  Dashboard",
+            "📈  Analysis",
+            "👥  Students",
+            "🔍  Insights",
+            "⚖️  Compare"
+        ], label_visibility="collapsed")
+
+        st.markdown("---")
+        st.markdown(f"""
+        <div style="font-size:0.8rem;line-height:2;color:#334155">
+            <div>👥 <b style="color:#64748b">{summary['total_students']}</b> students enrolled</div>
+            <div>🏛️ <b style="color:#64748b">{summary['departments']}</b> departments</div>
+            <div>✅ <b style="color:#34d399">{summary['pass_rate']}%</b> pass rate</div>
+            <div>📊 <b style="color:#00d4ff">{summary['avg_score']}</b> avg score</div>
+        </div>
+        """, unsafe_allow_html=True)
+else:
+    # When sidebar is closed, show a compact navigation
     st.markdown("---")
-    st.markdown(f"""
-    <div style="font-size:0.8rem;line-height:2;color:#334155">
-        <div>👥 <b style="color:#64748b">{summary['total_students']}</b> students enrolled</div>
-        <div>🏛️ <b style="color:#64748b">{summary['departments']}</b> departments</div>
-        <div>✅ <b style="color:#34d399">{summary['pass_rate']}%</b> pass rate</div>
-        <div>📊 <b style="color:#00d4ff">{summary['avg_score']}</b> avg score</div>
-    </div>
-    """, unsafe_allow_html=True)
+    page_cols = st.columns(5)
+    pages = ["⚡  Dashboard", "📈  Analysis", "👥  Students", "🔍  Insights", "⚖️  Compare"]
+    for i, p in enumerate(pages):
+        with page_cols[i]:
+            if st.button(p, use_container_width=True, key=f"nav_{i}"):
+                st.session_state.page = p
+                st.rerun()
+    
+    page = st.session_state.get("page", "⚡  Dashboard")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
