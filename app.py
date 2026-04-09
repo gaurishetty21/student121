@@ -204,13 +204,21 @@ summary = get_summary(df)
 # Initialize sidebar state
 if "sidebar_open" not in st.session_state:
     st.session_state.sidebar_open = True
+if "drawer_open" not in st.session_state:
+    st.session_state.drawer_open = False
 
 # Custom sidebar toggle button
-col_toggle, col_title = st.columns([0.1, 0.9])
+col_toggle, col_title = st.columns([0.08, 0.92])
 with col_toggle:
     if st.button("☰", key="sidebar_toggle", help="Toggle sidebar"):
         st.session_state.sidebar_open = not st.session_state.sidebar_open
+        st.session_state.drawer_open = False
         st.rerun()
+    # Show drawer toggle when sidebar is closed
+    if not st.session_state.sidebar_open:
+        if st.button("≡", key="drawer_toggle", help="Open menu"):
+            st.session_state.drawer_open = not st.session_state.drawer_open
+            st.rerun()
 
 with col_title:
     st.markdown("""
@@ -242,11 +250,11 @@ if st.session_state.sidebar_open:
         """, unsafe_allow_html=True)
 
         page = st.radio("Navigation", [
-            "⚡  Dashboard",
-            "📈  Analysis",
-            "👥  Students",
-            "🔍  Insights",
-            "⚖️  Compare"
+            "Dashboard",
+            "Analysis",
+            "Students",
+            "Insights",
+            "Compare"
         ], label_visibility="collapsed")
 
         st.markdown("---")
@@ -259,69 +267,179 @@ if st.session_state.sidebar_open:
         </div>
         """, unsafe_allow_html=True)
 else:
-    # When sidebar is closed, show a horizontal navigation menu
-    st.markdown("---")
+    page = st.session_state.get("page", "Dashboard")
 
-    # Create horizontal menu bar
+# Show interactive drawer menu when sidebar is closed and drawer is open
+if not st.session_state.sidebar_open and st.session_state.drawer_open:
     st.markdown("""
     <style>
-    .horizontal-menu {
-        display: flex;
-        gap: 4px;
-        margin-bottom: 2rem;
-        padding: 8px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
+    .drawer-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        animation: fadeIn 0.2s ease;
     }
-    .menu-item {
-        flex: 1;
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    .drawer-menu {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 300px;
+        height: 100vh;
+        background: linear-gradient(180deg, #070b18 0%, #0a0e1f 100%);
+        border-right: 1px solid rgba(255,255,255,0.1);
+        padding: 2rem 1.5rem;
+        z-index: 1001;
+        animation: slideIn 0.3s ease;
+        overflow-y: auto;
+    }
+    @keyframes slideIn {
+        from {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    .drawer-logo {
         text-align: center;
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
     }
-    .menu-button {
-        width: 100%;
+    .drawer-logo-svg {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 12px;
+    }
+    .drawer-logo-text {
+        font-family: 'Syne', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #00d4ff, #a78bfa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 4px;
+    }
+    .drawer-logo-sub {
+        font-size: 0.65rem;
+        color: #64748b;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    .drawer-items {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .drawer-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 16px;
+        border-radius: 12px;
         background: rgba(255,255,255,0.03);
         border: 1px solid rgba(255,255,255,0.08);
-        color: #94a3b8;
-        padding: 10px 8px;
-        border-radius: 8px;
-        font-size: 0.8rem;
-        font-weight: 600;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
         font-family: 'DM Sans', sans-serif;
+        color: #94a3b8;
+        font-weight: 500;
+        text-decoration: none;
     }
-    .menu-button:hover {
-        background: rgba(255,255,255,0.06);
+    .drawer-item:hover {
+        background: rgba(0,212,255,0.08);
         border-color: rgba(0,212,255,0.2);
         color: #e2e8f0;
+        transform: translateX(4px);
     }
-    .menu-button.active {
-        background: rgba(0,212,255,0.1);
+    .drawer-item.active {
+        background: rgba(0,212,255,0.12);
         border-color: rgba(0,212,255,0.3);
         color: #00d4ff;
     }
+    .drawer-icon {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+    .drawer-label {
+        font-size: 0.95rem;
+        flex: 1;
+    }
     </style>
+    
+    <div class="drawer-overlay"></div>
+    <div class="drawer-menu">
+        <div class="drawer-logo">
+            <svg class="drawer-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#a78bfa;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <!-- Modern graph bars -->
+                <rect x="15" y="65" width="12" height="20" fill="url(#logoGrad)" rx="2"/>
+                <rect x="32" y="45" width="12" height="40" fill="url(#logoGrad)" rx="2" opacity="0.8"/>
+                <rect x="49" y="25" width="12" height="60" fill="url(#logoGrad)" rx="2" opacity="0.9"/>
+                <rect x="66" y="35" width="12" height="50" fill="url(#logoGrad)" rx="2" opacity="0.85"/>
+                <!-- Connecting line -->
+                <path d="M 20 60 Q 40 35 75 38" stroke="url(#logoGrad)" stroke-width="2" fill="none" opacity="0.6"/>
+            </svg>
+            <div class="drawer-logo-text">EduMetrics</div>
+            <div class="drawer-logo-sub">Analytics Platform</div>
+        </div>
+        
+        <div class="drawer-items">
     """, unsafe_allow_html=True)
 
-    pages = ["⚡  Dashboard", "📈  Analysis", "👥  Students", "🔍  Insights", "⚖️  Compare"]
-    current_page = st.session_state.get("page", "⚡  Dashboard")
+    # Menu items with modern icons (using Unicode box symbols)
+    menu_items = [
+        ("Dashboard", "▦", "View overall analytics"),
+        ("Analysis", "▤", "Detailed analysis"),
+        ("Students", "▥", "Student management"),
+        ("Insights", "▢", "Key insights"),
+        ("Compare", "◆", "Compare students")
+    ]
 
-    # Create horizontal menu
-    cols = st.columns(len(pages))
-    for i, (col, p) in enumerate(zip(cols, pages)):
-        with col:
-            is_active = current_page == p
-            button_type = "primary" if is_active else "secondary"
-            if st.button(p, key=f"nav_{i}", use_container_width=True, type=button_type):
-                st.session_state.page = p
-                st.rerun()
+    for label, icon, title in menu_items:
+        is_active = page == label
+        active_class = "active" if is_active else ""
+        if st.button(f"{icon} {label}", key=f"drawer_{label}", help=title, use_container_width=False):
+            st.session_state.page = label
+            st.session_state.drawer_open = False
+            st.rerun()
+        st.markdown(f"""
+        <div class="drawer-item {active_class}" style="cursor: pointer;" onclick="document.querySelector('[data-testid=\\'stButton\\']').click()">
+            <div class="drawer-icon">{icon}</div>
+            <div class="drawer-label">{label}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    page = st.session_state.get("page", "⚡  Dashboard")
+    st.markdown("</div></div>", unsafe_allow_html=True)
+
+    # Set page from session state
+    page = st.session_state.get("page", "Dashboard")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE 1 — DASHBOARD
 # ══════════════════════════════════════════════════════════════════════════════
-if page == "⚡  Dashboard":
+if page == "Dashboard":
     page_header("Overview Dashboard",
                 f"Academic snapshot · {summary['total_students']} students · {summary['departments']} departments")
 
@@ -355,7 +473,7 @@ if page == "⚡  Dashboard":
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE 2 — ANALYSIS
 # ══════════════════════════════════════════════════════════════════════════════
-elif page == "📈  Analysis":
+elif page == "Analysis":
     page_header("Deep Analysis",
                 "Multi-dimensional breakdowns of attendance, study habits & subject performance")
 
@@ -384,7 +502,7 @@ elif page == "📈  Analysis":
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE 3 — STUDENTS
 # ══════════════════════════════════════════════════════════════════════════════
-elif page == "👥  Students":
+elif page == "Students":
     page_header("Student Records",
                 "Search, filter and explore every student's academic profile")
 
@@ -451,7 +569,7 @@ elif page == "👥  Students":
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE 4 — INSIGHTS
 # ══════════════════════════════════════════════════════════════════════════════
-elif page == "🔍  Insights":
+elif page == "Insights":
     page_header("Key Insights",
                 "Statistical highlights and patterns across the cohort")
 
@@ -557,7 +675,7 @@ elif page == "🔍  Insights":
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE 5 — COMPARE
 # ══════════════════════════════════════════════════════════════════════════════
-elif page == "⚖️  Compare":
+elif page == "Compare":
     page_header("Student Comparison",
                 "Select any two students for a detailed side-by-side analysis")
 
