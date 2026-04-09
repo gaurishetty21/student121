@@ -272,7 +272,7 @@ else:
 
 # Show interactive drawer menu when sidebar is closed and drawer is open
 if not st.session_state.sidebar_open and st.session_state.drawer_open:
-    # Render drawer header with logo and title
+    # Render drawer with navigation items inside
     st.markdown("""
     <style>
     .drawer-overlay {
@@ -284,86 +284,158 @@ if not st.session_state.sidebar_open and st.session_state.drawer_open:
         background: rgba(0, 0, 0, 0.5);
         z-index: 900;
     }
+    .drawer-nav-items {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .drawer-nav-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 14px 16px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'DM Sans', sans-serif;
+        color: #94a3b8;
+        font-weight: 500;
+    }
+    .drawer-nav-item:hover {
+        background: rgba(0,212,255,0.08);
+        border-color: rgba(0,212,255,0.2);
+        color: #e2e8f0;
+        transform: translateX(4px);
+    }
+    .drawer-nav-item.active {
+        background: rgba(0,212,255,0.12);
+        border-color: rgba(0,212,255,0.3);
+        color: #00d4ff;
+    }
+    .drawer-nav-icon {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+    }
     </style>
     <div class="drawer-overlay"></div>
-    """, unsafe_allow_html=True)
-    
-    # Create a container to hold the drawer menu
-    col_drawer = st.columns([2, 3])[0]
-    
-    with col_drawer:
-        st.markdown("""
-        <div style="
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 320px;
-            height: 100vh;
-            background: linear-gradient(180deg, #070b18 0%, #0a0e1f 100%);
-            border-right: 1px solid rgba(255,255,255,0.1);
-            padding: 2rem 1.5rem;
-            z-index: 1000;
-            overflow-y: auto;
-            box-sizing: border-box;
-        ">
-            <div style="text-align: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto 12px; display: block;">
-                    <defs>
-                        <linearGradient id="logoDraw" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#a78bfa;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <rect x="15" y="65" width="12" height="20" fill="url(#logoDraw)" rx="2"/>
-                    <rect x="32" y="45" width="12" height="40" fill="url(#logoDraw)" rx="2" opacity="0.8"/>
-                    <rect x="49" y="25" width="12" height="60" fill="url(#logoDraw)" rx="2" opacity="0.9"/>
-                    <rect x="66" y="35" width="12" height="50" fill="url(#logoDraw)" rx="2" opacity="0.85"/>
-                    <path d="M 20 60 Q 40 35 75 38" stroke="url(#logoDraw)" stroke-width="2" fill="none" opacity="0.6"/>
+    <div style="
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 320px;
+        height: 100vh;
+        background: linear-gradient(180deg, #070b18 0%, #0a0e1f 100%);
+        border-right: 1px solid rgba(255,255,255,0.1);
+        z-index: 1000;
+        overflow-y: auto;
+        padding: 2rem 1.5rem;
+        box-sizing: border-box;
+    ">
+        <!-- Header Logo -->
+        <div style="text-align: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto 12px; display: block;">
+                <defs>
+                    <linearGradient id="logoDraw2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#a78bfa;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <rect x="15" y="65" width="12" height="20" fill="url(#logoDraw2)" rx="2"/>
+                <rect x="32" y="45" width="12" height="40" fill="url(#logoDraw2)" rx="2" opacity="0.8"/>
+                <rect x="49" y="25" width="12" height="60" fill="url(#logoDraw2)" rx="2" opacity="0.9"/>
+                <rect x="66" y="35" width="12" height="50" fill="url(#logoDraw2)" rx="2" opacity="0.85"/>
+                <path d="M 20 60 Q 40 35 75 38" stroke="url(#logoDraw2)" stroke-width="2" fill="none" opacity="0.6"/>
+            </svg>
+            <div style="
+                font-family: 'Syne', sans-serif;
+                font-size: 1.3rem;
+                font-weight: 800;
+                background: linear-gradient(135deg, #00d4ff, #a78bfa);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 4px;
+            ">EduMetrics</div>
+            <div style="
+                font-size: 0.65rem;
+                color: #64748b;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+            ">Analytics Platform</div>
+        </div>
+
+        <!-- Navigation Items -->
+        <div class="drawer-nav-items">
+            <!-- Dashboard -->
+            <div class="drawer-nav-item" style="display: flex; align-items: center; gap: 16px;">
+                <svg class="drawer-nav-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <defs><linearGradient id="dash" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#00d4ff"/><stop offset="100%" style="stop-color:#a78bfa"/></linearGradient></defs>
+                    <rect x="12" y="36" width="8" height="16" fill="url(#dash)" rx="2"/><rect x="28" y="28" width="8" height="24" fill="url(#dash)" rx="2"/><rect x="44" y="20" width="8" height="32" fill="url(#dash)" rx="2"/><line x1="8" y1="52" x2="56" y2="52" stroke="url(#dash)" stroke-width="2" stroke-linecap="round"/>
                 </svg>
-                <div style="
-                    font-family: 'Syne', sans-serif;
-                    font-size: 1.3rem;
-                    font-weight: 800;
-                    background: linear-gradient(135deg, #00d4ff, #a78bfa);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    margin-bottom: 4px;
-                ">EduMetrics</div>
-                <div style="
-                    font-size: 0.65rem;
-                    color: #64748b;
-                    letter-spacing: 0.08em;
-                    text-transform: uppercase;
-                ">Analytics Platform</div>
+                <span style="flex: 1;">Dashboard</span>
+            </div>
+
+            <!-- Analysis -->
+            <div class="drawer-nav-item" style="display: flex; align-items: center; gap: 16px;">
+                <svg class="drawer-nav-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <defs><linearGradient id="anal" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#00d4ff"/><stop offset="100%" style="stop-color:#a78bfa"/></linearGradient></defs>
+                    <path d="M12 48 L12 20 Q20 10 28 18 T44 25 L44 48" stroke="url(#anal)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="28" cy="18" r="3" fill="url(#anal)"/><circle cx="44" cy="25" r="3" fill="url(#anal)"/><line x1="8" y1="52" x2="56" y2="52" stroke="url(#anal)" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span style="flex: 1;">Analysis</span>
+            </div>
+
+            <!-- Students -->
+            <div class="drawer-nav-item" style="display: flex; align-items: center; gap: 16px;">
+                <svg class="drawer-nav-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <defs><linearGradient id="stud" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#00d4ff"/><stop offset="100%" style="stop-color:#a78bfa"/></linearGradient></defs>
+                    <circle cx="20" cy="18" r="6" fill="url(#stud)"/><path d="M14 28 Q14 24 20 24 Q26 24 26 28" fill="url(#stud)"/><circle cx="44" cy="18" r="6" fill="url(#stud)"/><path d="M38 28 Q38 24 44 24 Q50 24 50 28" fill="url(#stud)"/><path d="M32 35 Q25 35 25 45 L39 45 Q39 35 32 35" fill="url(#stud)"/><circle cx="32" cy="32" r="5" fill="url(#stud)"/>
+                </svg>
+                <span style="flex: 1;">Students</span>
+            </div>
+
+            <!-- Insights -->
+            <div class="drawer-nav-item" style="display: flex; align-items: center; gap: 16px;">
+                <svg class="drawer-nav-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <defs><linearGradient id="ins" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#00d4ff"/><stop offset="100%" style="stop-color:#a78bfa"/></linearGradient></defs>
+                    <path d="M32 10 L42 28 L58 28 L46 38 L50 56 L32 46 L14 56 L18 38 L6 28 L22 28 Z" fill="url(#ins)"/><circle cx="32" cy="12" r="2" fill="#070b18"/><circle cx="38" cy="22" r="2" fill="#070b18"/>
+                </svg>
+                <span style="flex: 1;">Insights</span>
+            </div>
+
+            <!-- Compare -->
+            <div class="drawer-nav-item" style="display: flex; align-items: center; gap: 16px;">
+                <svg class="drawer-nav-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <defs><linearGradient id="cmp" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#00d4ff"/><stop offset="100%" style="stop-color:#a78bfa"/></linearGradient></defs>
+                    <ellipse cx="20" cy="32" rx="8" ry="14" fill="none" stroke="url(#cmp)" stroke-width="2.5"/><ellipse cx="44" cy="32" rx="8" ry="12" fill="none" stroke="url(#cmp)" stroke-width="2.5"/><line x1="28" y1="30" x2="36" y2="32" stroke="url(#cmp)" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span style="flex: 1;">Compare</span>
             </div>
         </div>
-        """, unsafe_allow_html=True)
-        
-        st.write("")  # Spacing
-        st.write("")  # Spacing
-        
-        # Navigation menu items
-        menu_items = [
-            ("Dashboard", "▦"),
-            ("Analysis", "▤"),
-            ("Students", "▥"),
-            ("Insights", "▢"),
-            ("Compare", "◆")
-        ]
-        
-        current_page = st.session_state.get("page", "Dashboard")
-        
-        st.markdown("<div style='margin-left: 1rem;'>", unsafe_allow_html=True)
-        for label, icon in menu_items:
-            is_active = current_page == label
-            if is_active:
-                st.markdown(f"**{icon}   {label}**", help=label)
-            else:
-                if st.button(f"{icon}   {label}", key=f"drawer_nav_{label}", use_container_width=True):
-                    st.session_state.page = label
-                    st.session_state.drawer_open = False
-                    st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Navigation menu items with working buttons
+    menu_items = [
+        "Dashboard",
+        "Analysis", 
+        "Students",
+        "Insights",
+        "Compare"
+    ]
+    
+    current_page = st.session_state.get("page", "Dashboard")
+    
+    # Create buttons with fixed position to align with drawer items
+    cols = st.columns([2.6, 1])  # Leave space for the drawer
+    
+    with cols[0]:
+        for label in menu_items:
+            if st.button(f"nav_{label}", key=f"drawer_nav_{label}", use_container_width=False, label=label):
+                st.session_state.page = label
+                st.session_state.drawer_open = False
+                st.rerun()
     
     # Set page from session state
     page = st.session_state.get("page", "Dashboard")
