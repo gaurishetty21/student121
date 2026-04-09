@@ -244,7 +244,7 @@ if page == "⚡  Dashboard":
     c3.metric("✅ Pass Rate",      f"{summary['pass_rate']}%")
     c4.metric("🏆 Top Score",      summary["top_score"])
     c5.metric("📅 Avg Attendance", f"{summary['avg_attendance']}%")
-    c6.metric("🎓 A-Grade Count",  summary["grade_A_count"])
+    c6.metric("🎓 A-Grade Count",  summary["grade_a_count"])
 
     section("📊", "Score Overview")
     col1, col2 = st.columns([3, 2])

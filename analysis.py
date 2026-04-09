@@ -166,29 +166,28 @@ def correlation_heatmap(df):
 
 # Line ~170 — top_students_table function
 def top_students_table(df):
-    top = df.nlargest(10, 'avg_score')[['name','department','avg_score','grade','attendance','study_hours_per_day']].copy()
-    top.columns = ['name','department','avg_score','grade','attendance','study_hours_per_day']
+    top = df.nlargest(10, 'avg_score')[['name','department','avg_score','grade',
+                                        'attendance','study_hours_per_day']].copy()  # ← changed
+    top.columns = ['Name','Dept','Avg Score','Grade','Attendance %','Study Hrs/Day']
     return top.to_dict(orient='records')
 
 # Line ~177 — bottom_students_table function
 def bottom_students_table(df):
     bot = df.nsmallest(10, 'avg_score')[['name','department','avg_score','grade',
                                           'attendance','study_hours_per_day']].copy()  # ← changed
-    bot.columns = ['name','department','avg_score','grade','attendance','study_hours_per_day']
+    bot.columns = ['Name','Dept','Avg Score','Grade','Attendance %','Study Hrs/Day']
     return bot.to_dict(orient='records')
 
 def radar_chart_dept(df):
     depts = df['department'].unique()
     fig = go.Figure()
     colors = ["#00d4ff","#a78bfa","#34d399","#fb923c","#f472b6"]
-    fill_colors = ["rgba(0,212,255,0.2)","rgba(167,139,250,0.2)","rgba(52,211,153,0.2)","rgba(251,146,60,0.2)","rgba(244,114,182,0.2)"]
     for i, dept in enumerate(depts):
         sub = df[df['department']==dept][SUBJECTS].mean().values.tolist()
         sub += sub[:1]
         fig.add_trace(go.Scatterpolar(
             r=sub, theta=SUBJECT_LABELS + [SUBJECT_LABELS[0]],
             fill='toself', name=dept,
-            fillcolor=fill_colors[i % len(fill_colors)],
             line_color=colors[i % len(colors)],
             opacity=0.7
         ))
