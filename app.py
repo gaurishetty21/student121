@@ -210,13 +210,14 @@ if "drawer_open" not in st.session_state:
 # Custom sidebar toggle button
 col_toggle, col_title = st.columns([0.08, 0.92])
 with col_toggle:
-    if st.button("☰", key="sidebar_toggle", help="Toggle sidebar"):
-        st.session_state.sidebar_open = not st.session_state.sidebar_open
-        st.session_state.drawer_open = False
-        st.rerun()
-    # Show drawer toggle when sidebar is closed
-    if not st.session_state.sidebar_open:
-        if st.button("≡", key="drawer_toggle", help="Open menu"):
+    # Show single button - hamburger when sidebar open, menu icon when closed
+    if st.session_state.sidebar_open:
+        if st.button("☰", key="sidebar_toggle", help="Toggle sidebar"):
+            st.session_state.sidebar_open = not st.session_state.sidebar_open
+            st.session_state.drawer_open = False
+            st.rerun()
+    else:
+        if st.button("☰", key="drawer_toggle", help="Open menu"):
             st.session_state.drawer_open = not st.session_state.drawer_open
             st.rerun()
 
@@ -260,10 +261,10 @@ if st.session_state.sidebar_open:
         st.markdown("---")
         st.markdown(f"""
         <div style="font-size:0.8rem;line-height:2;color:#334155">
-            <div>👥 <b style="color:#64748b">{summary['total_students']}</b> students enrolled</div>
-            <div>🏛️ <b style="color:#64748b">{summary['departments']}</b> departments</div>
-            <div>✅ <b style="color:#34d399">{summary['pass_rate']}%</b> pass rate</div>
-            <div>📊 <b style="color:#00d4ff">{summary['avg_score']}</b> avg score</div>
+            <div><b style="color:#64748b">{summary['total_students']}</b> students enrolled</div>
+            <div><b style="color:#64748b">{summary['departments']}</b> departments</div>
+            <div><b style="color:#34d399">{summary['pass_rate']}%</b> pass rate</div>
+            <div><b style="color:#00d4ff">{summary['avg_score']}</b> avg score</div>
         </div>
         """, unsafe_allow_html=True)
 else:
@@ -271,6 +272,7 @@ else:
 
 # Show interactive drawer menu when sidebar is closed and drawer is open
 if not st.session_state.sidebar_open and st.session_state.drawer_open:
+    # Render drawer header with logo and title
     st.markdown("""
     <style>
     .drawer-overlay {
@@ -280,160 +282,95 @@ if not st.session_state.sidebar_open and st.session_state.drawer_open:
         right: 0;
         bottom: 0;
         background: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-        animation: fadeIn 0.2s ease;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    .drawer-menu {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 300px;
-        height: 100vh;
-        background: linear-gradient(180deg, #070b18 0%, #0a0e1f 100%);
-        border-right: 1px solid rgba(255,255,255,0.1);
-        padding: 2rem 1.5rem;
-        z-index: 1001;
-        animation: slideIn 0.3s ease;
-        overflow-y: auto;
-    }
-    @keyframes slideIn {
-        from {
-            transform: translateX(-100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    .drawer-logo {
-        text-align: center;
-        margin-bottom: 2.5rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-    .drawer-logo-svg {
-        width: 80px;
-        height: 80px;
-        margin: 0 auto 12px;
-    }
-    .drawer-logo-text {
-        font-family: 'Syne', sans-serif;
-        font-size: 1.3rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, #00d4ff, #a78bfa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 4px;
-    }
-    .drawer-logo-sub {
-        font-size: 0.65rem;
-        color: #64748b;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-    }
-    .drawer-items {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-    .drawer-item {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        padding: 14px 16px;
-        border-radius: 12px;
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.08);
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-family: 'DM Sans', sans-serif;
-        color: #94a3b8;
-        font-weight: 500;
-        text-decoration: none;
-    }
-    .drawer-item:hover {
-        background: rgba(0,212,255,0.08);
-        border-color: rgba(0,212,255,0.2);
-        color: #e2e8f0;
-        transform: translateX(4px);
-    }
-    .drawer-item.active {
-        background: rgba(0,212,255,0.12);
-        border-color: rgba(0,212,255,0.3);
-        color: #00d4ff;
-    }
-    .drawer-icon {
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        flex-shrink: 0;
-    }
-    .drawer-label {
-        font-size: 0.95rem;
-        flex: 1;
+        z-index: 900;
     }
     </style>
-    
     <div class="drawer-overlay"></div>
-    <div class="drawer-menu">
-        <div class="drawer-logo">
-            <svg class="drawer-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#a78bfa;stop-opacity:1" />
-                    </linearGradient>
-                </defs>
-                <!-- Modern graph bars -->
-                <rect x="15" y="65" width="12" height="20" fill="url(#logoGrad)" rx="2"/>
-                <rect x="32" y="45" width="12" height="40" fill="url(#logoGrad)" rx="2" opacity="0.8"/>
-                <rect x="49" y="25" width="12" height="60" fill="url(#logoGrad)" rx="2" opacity="0.9"/>
-                <rect x="66" y="35" width="12" height="50" fill="url(#logoGrad)" rx="2" opacity="0.85"/>
-                <!-- Connecting line -->
-                <path d="M 20 60 Q 40 35 75 38" stroke="url(#logoGrad)" stroke-width="2" fill="none" opacity="0.6"/>
-            </svg>
-            <div class="drawer-logo-text">EduMetrics</div>
-            <div class="drawer-logo-sub">Analytics Platform</div>
-        </div>
-        
-        <div class="drawer-items">
     """, unsafe_allow_html=True)
-
-    # Menu items with modern icons (using Unicode box symbols)
-    menu_items = [
-        ("Dashboard", "▦", "View overall analytics"),
-        ("Analysis", "▤", "Detailed analysis"),
-        ("Students", "▥", "Student management"),
-        ("Insights", "▢", "Key insights"),
-        ("Compare", "◆", "Compare students")
-    ]
-
-    for label, icon, title in menu_items:
-        is_active = page == label
-        active_class = "active" if is_active else ""
-        if st.button(f"{icon} {label}", key=f"drawer_{label}", help=title, use_container_width=False):
-            st.session_state.page = label
-            st.session_state.drawer_open = False
-            st.rerun()
-        st.markdown(f"""
-        <div class="drawer-item {active_class}" style="cursor: pointer;" onclick="document.querySelector('[data-testid=\\'stButton\\']').click()">
-            <div class="drawer-icon">{icon}</div>
-            <div class="drawer-label">{label}</div>
+    
+    # Create a container to hold the drawer menu
+    col_drawer = st.columns([2, 3])[0]
+    
+    with col_drawer:
+        st.markdown("""
+        <div style="
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 320px;
+            height: 100vh;
+            background: linear-gradient(180deg, #070b18 0%, #0a0e1f 100%);
+            border-right: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem 1.5rem;
+            z-index: 1000;
+            overflow-y: auto;
+            box-sizing: border-box;
+        ">
+            <div style="text-align: center; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto 12px; display: block;">
+                    <defs>
+                        <linearGradient id="logoDraw" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#a78bfa;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <rect x="15" y="65" width="12" height="20" fill="url(#logoDraw)" rx="2"/>
+                    <rect x="32" y="45" width="12" height="40" fill="url(#logoDraw)" rx="2" opacity="0.8"/>
+                    <rect x="49" y="25" width="12" height="60" fill="url(#logoDraw)" rx="2" opacity="0.9"/>
+                    <rect x="66" y="35" width="12" height="50" fill="url(#logoDraw)" rx="2" opacity="0.85"/>
+                    <path d="M 20 60 Q 40 35 75 38" stroke="url(#logoDraw)" stroke-width="2" fill="none" opacity="0.6"/>
+                </svg>
+                <div style="
+                    font-family: 'Syne', sans-serif;
+                    font-size: 1.3rem;
+                    font-weight: 800;
+                    background: linear-gradient(135deg, #00d4ff, #a78bfa);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    margin-bottom: 4px;
+                ">EduMetrics</div>
+                <div style="
+                    font-size: 0.65rem;
+                    color: #64748b;
+                    letter-spacing: 0.08em;
+                    text-transform: uppercase;
+                ">Analytics Platform</div>
+            </div>
         </div>
         """, unsafe_allow_html=True)
-
-    st.markdown("</div></div>", unsafe_allow_html=True)
-
+        
+        st.write("")  # Spacing
+        st.write("")  # Spacing
+        
+        # Navigation menu items
+        menu_items = [
+            ("Dashboard", "▦"),
+            ("Analysis", "▤"),
+            ("Students", "▥"),
+            ("Insights", "▢"),
+            ("Compare", "◆")
+        ]
+        
+        current_page = st.session_state.get("page", "Dashboard")
+        
+        st.markdown("<div style='margin-left: 1rem;'>", unsafe_allow_html=True)
+        for label, icon in menu_items:
+            is_active = current_page == label
+            if is_active:
+                st.markdown(f"**{icon}   {label}**", help=label)
+            else:
+                if st.button(f"{icon}   {label}", key=f"drawer_nav_{label}", use_container_width=True):
+                    st.session_state.page = label
+                    st.session_state.drawer_open = False
+                    st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
+    
     # Set page from session state
     page = st.session_state.get("page", "Dashboard")
+else:
+    # Set page from session state when drawer is not showing
+    if not st.session_state.sidebar_open:
+        page = st.session_state.get("page", "Dashboard")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
