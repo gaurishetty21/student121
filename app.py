@@ -201,6 +201,10 @@ def score_color(score):
 df = load_data()
 summary = get_summary(df)
 
+# Initialize page in session state if not exists
+if "page" not in st.session_state:
+    st.session_state.page = "⚡  Dashboard"
+
 with st.sidebar:
     st.markdown("""
     <div style="text-align:center;padding:1.2rem 0 1.8rem">
@@ -216,13 +220,15 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    page = st.radio("Navigation", [
+    page = st.sidebar.radio("Navigation", [
         "⚡  Dashboard",
         "📈  Analysis",
         "👥  Students",
         "🔍  Insights",
         "⚖️  Compare"
-    ], label_visibility="collapsed")
+    ], label_visibility="collapsed", key="page_select")
+    
+    st.session_state.page = page
 
     st.markdown("---")
     st.markdown(f"""
@@ -234,6 +240,22 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PAGE NAVIGATION TABS
+# ══════════════════════════════════════════════════════════════════════════════
+pages = ["⚡  Dashboard", "📈  Analysis", "👥  Students", "🔍  Insights", "⚖️  Compare"]
+nav_cols = st.columns(len(pages))
+for i, p in enumerate(pages):
+    with nav_cols[i]:
+        if st.button(p, use_container_width=True, key=f"nav_{i}", 
+                     help=f"Go to {p}"):
+            st.session_state.page = p
+            st.rerun()
+
+st.markdown("---")
+
+page = st.session_state.page
 
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE 1 — DASHBOARD
