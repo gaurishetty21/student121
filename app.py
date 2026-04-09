@@ -581,11 +581,11 @@ elif page == "Students":
         section("🏆", "Top 10 Students")
         for s in top_students_table(df):
             ca, cb, cc = st.columns([3, 1, 1])
-            ca.markdown(f"**{s['name']}** <span style='color:#475569;font-size:0.78rem'> · {s['department']}</span>",
+            ca.markdown(f"**{s['Name']}** <span style='color:#475569;font-size:0.78rem'> · {s['Dept']}</span>",
                         unsafe_allow_html=True)
-            cb.markdown(f"<span style='color:{score_color(s['avg_score'])};font-weight:700'>{s['avg_score']}</span>",
+            cb.markdown(f"<span style='color:{score_color(s['Avg Score'])};font-weight:700'>{s['Avg Score']}</span>",
                         unsafe_allow_html=True)
-            cc.markdown(grade_badge(s["grade"]), unsafe_allow_html=True)
+            cc.markdown(grade_badge(s["Grade"]), unsafe_allow_html=True)
 
     with col_risk:
         section("⚠️", "At-Risk Students (Score < 60)")
@@ -595,11 +595,11 @@ elif page == "Students":
                         unsafe_allow_html=True)
             for s in risk_data[:10]:
                 ca, cb, cc = st.columns([3, 1, 1])
-                ca.markdown(f"**{s['name']}** <span style='color:#475569;font-size:0.78rem'> · {s['department']}</span>",
+                ca.markdown(f"**{s['Name']}** <span style='color:#475569;font-size:0.78rem'> · {s['Dept']}</span>",
                             unsafe_allow_html=True)
-                cb.markdown(f"<span style='color:#ef4444;font-weight:700'>{s['avg_score']}</span>",
+                cb.markdown(f"<span style='color:#ef4444;font-weight:700'>{s['Avg Score']}</span>",
                             unsafe_allow_html=True)
-                cc.markdown(grade_badge(s["grade"]), unsafe_allow_html=True)
+                cc.markdown(grade_badge(s["Grade"]), unsafe_allow_html=True)
         else:
             st.success("No at-risk students! 🎉")
 
