@@ -259,15 +259,15 @@ if st.session_state.sidebar_open:
         </div>
         """, unsafe_allow_html=True)
 else:
-    # When sidebar is closed, show a compact navigation
+    # When sidebar is closed, show a compact vertical navigation
     st.markdown("---")
-    page_cols = st.columns(5)
+    st.markdown("### 📋 Navigation")
     pages = ["⚡  Dashboard", "📈  Analysis", "👥  Students", "🔍  Insights", "⚖️  Compare"]
     for i, p in enumerate(pages):
-        with page_cols[i]:
-            if st.button(p, use_container_width=True, key=f"nav_{i}"):
-                st.session_state.page = p
-                st.rerun()
+        if st.button(p, key=f"nav_{i}", use_container_width=True):
+            st.session_state.page = p
+            st.rerun()
+    st.markdown("---")
     
     page = st.session_state.get("page", "⚡  Dashboard")
 
