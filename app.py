@@ -393,11 +393,11 @@ if not st.session_state.sidebar_open and st.session_state.drawer_open:
     
     # Navigation buttons positioned over the drawer
     menu_items = [
-        ("Dashboard", "▦"),
-        ("Analysis", "▤"), 
-        ("Students", "▥"),
-        ("Insights", "▢"),
-        ("Compare", "◆")
+        ("Dashboard", "📊"),
+        ("Analysis", "📈"), 
+        ("Students", "👥"),
+        ("Insights", "💡"),
+        ("Compare", "⚖️")
     ]
     
     current_page = st.session_state.get("page", "Dashboard")
