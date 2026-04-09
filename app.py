@@ -173,7 +173,11 @@ hr { border-color: rgba(255,255,255,0.06) !important; margin: 1.5rem 0 !importan
 
 
 def render_chart(fig_data):
-    fig = go.Figure(fig_data)
+    if isinstance(fig_data, str):
+        fig_dict = json.loads(fig_data)
+    else:
+        fig_dict = fig_data
+    fig = go.Figure(fig_dict)
     st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
 def page_header(title, subtitle):
