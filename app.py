@@ -173,11 +173,7 @@ hr { border-color: rgba(255,255,255,0.06) !important; margin: 1.5rem 0 !importan
 
 
 def render_chart(fig_data):
-    if isinstance(fig_data, str):
-        fig_dict = json.loads(fig_data)
-    else:
-        fig_dict = fig_data
-    fig = go.Figure(fig_dict)
+    fig = go.Figure(fig_data)
     st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
 def page_header(title, subtitle):
@@ -201,10 +197,6 @@ def score_color(score):
 df = load_data()
 summary = get_summary(df)
 
-# Initialize page in session state if not exists
-if "page" not in st.session_state:
-    st.session_state.page = "⚡  Dashboard"
-
 with st.sidebar:
     st.markdown("""
     <div style="text-align:center;padding:1.2rem 0 1.8rem">
@@ -220,15 +212,13 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    page = st.sidebar.radio("Navigation", [
+    page = st.radio("Navigation", [
         "⚡  Dashboard",
         "📈  Analysis",
         "👥  Students",
         "🔍  Insights",
         "⚖️  Compare"
-    ], label_visibility="collapsed", key="page_select")
-    
-    st.session_state.page = page
+    ], label_visibility="collapsed")
 
     st.markdown("---")
     st.markdown(f"""
@@ -240,22 +230,6 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-# PAGE NAVIGATION TABS
-# ══════════════════════════════════════════════════════════════════════════════
-pages = ["⚡  Dashboard", "📈  Analysis", "👥  Students", "🔍  Insights", "⚖️  Compare"]
-nav_cols = st.columns(len(pages))
-for i, p in enumerate(pages):
-    with nav_cols[i]:
-        if st.button(p, use_container_width=True, key=f"nav_{i}", 
-                     help=f"Go to {p}"):
-            st.session_state.page = p
-            st.rerun()
-
-st.markdown("---")
-
-page = st.session_state.page
 
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE 1 — DASHBOARD
@@ -270,7 +244,7 @@ if page == "⚡  Dashboard":
     c3.metric("✅ Pass Rate",      f"{summary['pass_rate']}%")
     c4.metric("🏆 Top Score",      summary["top_score"])
     c5.metric("📅 Avg Attendance", f"{summary['avg_attendance']}%")
-    c6.metric("🎓 A-Grade Count",  summary["grade_a_count"])
+    c6.metric("🎓 A-Grade Count",  summary["grade_A_count"])
 
     section("📊", "Score Overview")
     col1, col2 = st.columns([3, 2])
@@ -558,10 +532,6 @@ elif page == "⚖️  Compare":
     subjects_vals_b = [float(b[s]) for s in SUBJECTS]
 
     fig = go.Figure()
-    fill_colors = {
-        "#00d4ff": "rgba(0,212,255,0.2)",
-        "#a78bfa": "rgba(167,139,250,0.2)"
-    }
     for vals, sname, color in [
         (subjects_vals_a, name_a, "#00d4ff"),
         (subjects_vals_b, name_b, "#a78bfa")
@@ -571,7 +541,7 @@ elif page == "⚖️  Compare":
         fig.add_trace(go.Scatterpolar(
             r=closed, theta=theta, fill="toself", name=sname,
             line=dict(color=color, width=2),
-            fillcolor=fill_colors[color]
+            fillcolor=color + "22"
         ))
     fig.update_layout(
         polar=dict(
