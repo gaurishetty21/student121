@@ -250,13 +250,19 @@ if st.session_state.sidebar_open:
         </div>
         """, unsafe_allow_html=True)
 
+        current_page = st.session_state.get("page", "Dashboard")
         page = st.radio("Navigation", [
             "Dashboard",
             "Analysis",
             "Students",
             "Insights",
             "Compare"
-        ], label_visibility="collapsed")
+        ], index=["Dashboard", "Analysis", "Students", "Insights", "Compare"].index(current_page), label_visibility="collapsed")
+
+        # Update session state page when radio changes
+        if page != current_page:
+            st.session_state.page = page
+            st.rerun()
 
         st.markdown("---")
         st.markdown(f"""
