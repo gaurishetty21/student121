@@ -1,0 +1,51 @@
+id,name,gender,age,department,math_score,physics_score,chemistry_score,english_score,cs_score,attendance,assignments_submitted,study_hours_per_day,extracurricular,part_time_job,parent_education,internet_access,grade
+1,Aarav Sharma,M,19,CSE,88,76,82,79,94,92,18,5,Yes,No,Graduate,Yes,A
+2,Priya Patel,F,20,ECE,72,68,74,85,70,85,16,4,Yes,No,Postgraduate,Yes,B
+3,Rohan Mehta,M,21,MECH,55,60,58,62,50,70,12,2,No,Yes,High School,No,C
+4,Sneha Reddy,F,19,CSE,91,88,90,93,96,97,20,6,Yes,No,Postgraduate,Yes,A
+5,Kiran Kumar,M,22,CIVIL,45,50,48,55,40,60,9,1,No,Yes,High School,No,D
+6,Ananya Iyer,F,20,ECE,78,80,75,88,72,88,17,4,Yes,No,Graduate,Yes,B
+7,Vikram Singh,M,21,CSE,83,79,85,77,89,90,19,5,No,No,Graduate,Yes,A
+8,Divya Nair,F,19,MECH,62,58,65,70,55,75,13,3,Yes,Yes,High School,Yes,C
+9,Arjun Das,M,20,CIVIL,70,72,68,65,60,80,15,3,Yes,No,Graduate,Yes,B
+10,Meera Joshi,F,21,CSE,95,92,94,96,98,99,20,7,Yes,No,Postgraduate,Yes,A
+11,Siddharth Rao,M,22,ECE,58,62,55,60,65,72,11,2,No,Yes,High School,No,C
+12,Kavya Menon,F,19,MECH,74,70,78,82,68,86,16,4,Yes,No,Graduate,Yes,B
+13,Nikhil Gupta,M,20,CSE,80,75,78,72,85,87,18,5,Yes,No,Graduate,Yes,A
+14,Pooja Shah,F,21,CIVIL,66,63,69,74,58,77,14,3,No,No,High School,Yes,B
+15,Rahul Verma,M,19,ECE,50,55,52,58,48,65,10,2,No,Yes,High School,No,C
+16,Ishaan Kapoor,M,22,CSE,87,84,86,80,92,93,19,6,Yes,No,Postgraduate,Yes,A
+17,Nandini Roy,F,20,MECH,69,65,72,76,62,82,15,3,Yes,Yes,Graduate,Yes,B
+18,Aditya Bose,M,19,CIVIL,42,48,45,50,38,55,8,1,No,Yes,High School,No,D
+19,Lakshmi Pillai,F,21,CSE,93,90,91,95,97,98,20,7,Yes,No,Postgraduate,Yes,A
+20,Manish Tiwari,M,20,ECE,63,67,60,65,70,74,13,2,No,Yes,High School,No,C
+21,Shreya Agarwal,F,19,MECH,77,73,80,84,71,89,17,4,Yes,No,Graduate,Yes,B
+22,Deepak Nanda,M,22,CSE,85,82,83,78,88,91,18,5,No,No,Graduate,Yes,A
+23,Ritika Saxena,F,20,CIVIL,71,68,74,79,65,83,16,3,Yes,No,Graduate,Yes,B
+24,Suresh Chandra,M,21,ECE,48,53,50,55,45,63,10,2,No,Yes,High School,No,D
+25,Bhavana Kumari,F,19,CSE,89,86,87,91,93,95,19,6,Yes,No,Postgraduate,Yes,A
+26,Gaurav Mishra,M,20,MECH,60,57,63,66,55,71,12,2,No,Yes,High School,No,C
+27,Pallavi Desai,F,21,CIVIL,75,72,77,81,67,85,16,4,Yes,No,Graduate,Yes,B
+28,Akhil Pandey,M,22,CSE,82,78,80,75,86,89,18,5,Yes,No,Graduate,Yes,A
+29,Sonal Banerjee,F,19,ECE,67,63,70,74,61,78,14,3,No,No,High School,Yes,B
+30,Tarun Malhotra,M,20,MECH,53,58,55,60,50,68,11,2,No,Yes,High School,No,C
+31,Harini Subramanian,F,21,CSE,90,88,89,93,95,96,20,6,Yes,No,Postgraduate,Yes,A
+32,Varun Shukla,M,19,CIVIL,44,49,46,52,40,58,9,1,No,Yes,High School,No,D
+33,Chetna Yadav,F,22,ECE,73,69,76,80,66,84,16,4,Yes,No,Graduate,Yes,B
+34,Rohit Tripathi,M,20,CSE,86,83,84,79,90,92,19,5,Yes,No,Graduate,Yes,A
+35,Amisha Patel,F,19,MECH,64,60,67,72,57,76,13,3,Yes,Yes,High School,Yes,C
+36,Karthik Nair,M,21,CIVIL,70,66,72,75,62,81,15,3,No,No,Graduate,Yes,B
+37,Swati Kulkarni,F,20,CSE,92,89,91,94,96,97,20,7,Yes,No,Postgraduate,Yes,A
+38,Ajay Rajan,M,22,ECE,57,61,54,59,64,70,11,2,No,Yes,High School,No,C
+39,Deepika Sharma,F,19,MECH,79,75,81,85,72,88,17,4,Yes,No,Graduate,Yes,B
+40,Prashant Dube,M,20,CIVIL,47,52,49,54,43,62,10,1,No,Yes,High School,No,D
+41,Namrata Singh,F,21,CSE,84,81,82,77,87,90,18,5,Yes,No,Graduate,Yes,A
+42,Vivek Acharya,M,19,ECE,61,65,58,63,68,73,12,2,No,Yes,High School,No,C
+43,Radhika Menon,F,22,MECH,76,72,78,83,69,86,16,4,Yes,No,Graduate,Yes,B
+44,Santosh Kumar,M,20,CSE,88,85,86,81,91,93,19,5,No,No,Graduate,Yes,A
+45,Falguni Shah,F,19,CIVIL,68,64,71,76,62,79,14,3,Yes,No,High School,Yes,B
+46,Naveen Reddy,M,21,ECE,52,57,54,58,49,66,10,2,No,Yes,High School,No,C
+47,Geeta Pillai,F,20,CSE,94,91,92,96,98,99,20,7,Yes,No,Postgraduate,Yes,A
+48,Ramesh Choudhary,M,22,MECH,59,55,62,65,53,69,11,2,No,Yes,High School,No,C
+49,Sunita Jain,F,19,CIVIL,74,70,77,81,66,84,16,3,Yes,No,Graduate,Yes,B
+50,Lokesh Yadav,M,20,CSE,81,77,79,74,84,88,17,5,Yes,No,Graduate,Yes,A
